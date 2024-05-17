@@ -1,4 +1,5 @@
 // Import des modules nécessaires
+require('dotenv').config();
 const express = require("express"); // Import du framework Express
 const bodyParser = require("body-parser"); // Import du module body-parser pour l'analyse des corps de requête
 const mongoose = require("mongoose"); // Import du module mongoose pour la gestion de MongoDB
@@ -6,6 +7,9 @@ const morgan = require("morgan"); // Import du module morgan pour la journalisat
 const path = require("path"); // Import du module path pour la gestion des chemins de fichiers
 const helmet = require("helmet"); // Import du module helmet pour la sécurité des applications Express
 const cors = require("cors"); // Import du module cors pour la gestion des requêtes CORS
+
+
+
 
 // Import des fichiers de routes
 const sauceRoutes = require("./routes/sauce.js"); // Import des routes pour les sauces
@@ -23,10 +27,17 @@ app.use(
     crossOriginResourcePolicy: { policy: "same-site" }, // Middleware pour sécuriser les en-têtes HTTP
   })
 );
+const USER = process.env.USER_DB;
+const PASSWORD = process.env.PASSWORD_DB;
+const DATABASE = process.env.NAME_DB;
+const APPNAME= process.env.APPNAME_DB
+
+const uri = `mongodb+srv://${USER}:${PASSWORD}@${DATABASE}.o1kxqsm.mongodb.net/?retryWrites=true&w=majority&appName=${APPNAME}`
+
 
 // Connexion à la base de données MongoDB
 mongoose
-  .connect('mongodb+srv://ben1:ben1@cluster0.o1kxqsm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0',
+  .connect(uri,
     { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch(() => console.log('Connexion à MongoDB échouée !'));
